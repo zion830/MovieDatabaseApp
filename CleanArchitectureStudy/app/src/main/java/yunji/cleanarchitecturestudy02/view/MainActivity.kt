@@ -15,9 +15,10 @@ import yunji.cleanarchitecturestudy02.util.showToast
 import yunji.cleanarchitecturestudy02.viewmodel.MainViewModel
 import yunji.cleanarchitecturestudy02.viewmodel.MainViewModelFactory
 
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.activity_main) {
     private val movieRecyclerAdapter = MoviePagedRecyclerAdapter()
-    private val mainViewModel by lazy {
+
+    override val viewModel: MainViewModel by lazy {
         ViewModelProvider(this, MainViewModelFactory(MovieRepository))[MainViewModel::class.java]
     }
 
@@ -42,16 +43,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun initView() {
         binding.apply {
-            viewModel = mainViewModel
-            lifecycleOwner = this@MainActivity
             rvMain.adapter = movieRecyclerAdapter
         }
 
-        mainViewModel.initMovieData()
+        viewModel.initMovieData()
     }
 
     private fun observeUiData() {
-        with(mainViewModel) {
+        with(viewModel) {
             msgText.observe(this@MainActivity, Observer { showToast(it) })
         }
     }
