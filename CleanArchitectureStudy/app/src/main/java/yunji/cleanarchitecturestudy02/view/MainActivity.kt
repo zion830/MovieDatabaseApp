@@ -19,7 +19,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     private val movieRecyclerAdapter = MoviePagedRecyclerAdapter()
 
     override val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this, MainViewModelFactory(MovieRepository))[MainViewModel::class.java]
+        ViewModelProvider(this, MainViewModelFactory(MovieRepository.instance))[MainViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

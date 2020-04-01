@@ -29,12 +29,12 @@ class MainViewModel(
 
     fun initMovieData() {
         pagingMovieList = repository.getMoviePagedList(
-            onPagingStart = { _isLoading.postValue(true) },
-            onPagingSuccess = {
+            pagingStart = { _isLoading.postValue(true) },
+            pagingSuccess = {
                 _isLoading.postValue(false)
                 _isExist.postValue(pagingMovieList.value?.size!! > 0)
             },
-            onPagingFailed = {
+            pagingFailed = {
                 _msgText.postValue(it)
                 _isLoading.postValue(false)
                 _isExist.postValue(false)
