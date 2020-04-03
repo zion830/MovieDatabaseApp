@@ -60,6 +60,8 @@ dependencies {
     // coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$coroutine_ktx_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$coroutine_ktx_version"
 
     // AAC
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
