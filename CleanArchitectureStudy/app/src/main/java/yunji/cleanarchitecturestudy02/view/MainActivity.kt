@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import yunji.cleanarchitecturestudy02.R
 import yunji.cleanarchitecturestudy02.adapter.MoviePagedRecyclerAdapter
@@ -34,7 +33,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
         initAdapter()
         initView()
-        observeUiData()
         handleIntent(intent)
     }
 
@@ -49,17 +47,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     private fun initView() {
         setSupportActionBar(binding.toolbarMain)
-        binding.apply {
+        with(binding) {
             rvMain.adapter = movieRecyclerAdapter
         }
 
         viewModel.initMovieData()
-    }
-
-    private fun observeUiData() {
-        with(viewModel) {
-            msgText.observe(this@MainActivity, Observer { showToast(it) })
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
