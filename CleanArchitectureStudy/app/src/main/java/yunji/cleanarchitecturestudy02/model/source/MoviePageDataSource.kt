@@ -12,9 +12,8 @@ import yunji.cleanarchitecturestudy02.model.response.MovieListResponse
  */
 class MoviePageDataSource private constructor(
     private val dataSource: MovieDataSource,
-    private val onPagingStart: () -> Unit,
-    private val onPagingSuccess: (response: MovieListResponse) -> Unit,
-    private val onPagingFailed: (errMsg: String) -> Unit
+    private val pagingSuccess: (response: MovieListResponse) -> Unit,
+    private val pagingFailed: (errMsg: String) -> Unit
 ) : PageKeyedDataSource<Int, Movie>() {
     private var totalPages = FIRST_PAGE
 
@@ -33,26 +32,23 @@ class MoviePageDataSource private constructor(
 
     class Factory(
         private val dataSource: MovieDataSource,
-        private val onPagingStart: () -> Unit,
-        private val onPagingSuccess: (response: MovieListResponse) -> Unit,
-        private val onPagingFailed: (errMsg: String) -> Unit
+        private val pagingSuccess: (response: MovieListResponse) -> Unit,
+        private val pagingFailed: (errMsg: String) -> Unit
     ) : DataSource.Factory<Int, Movie>() {
 
         override fun create(): DataSource<Int, Movie> =
-            MoviePageDataSource(dataSource, onPagingStart, onPagingSuccess, onPagingFailed)
+            MoviePageDataSource(dataSource, pagingSuccess, pagingFailed)
     }
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movie>) {
-        run(onPagingStart)
-
-        dataSource.getPopularMovieList(
+        dataSource.getAllMovieList(
             FIRST_PAGE,
             success = {
                 totalPages = it.totalPages
                 callback.onResult(it.movies, null, FIRST_PAGE + PAGING_UNIT)
-                onPagingSuccess(it)
+                pagingSuccess(it)
             }, failed = {
-                onPagingFailed(it)
+                pagingFailed(it)
                 Log.e(TAG, it)
             })
     }
@@ -62,14 +58,14 @@ class MoviePageDataSource private constructor(
             return // 마지막 페이지일 경우 로딩하지 않음
         }
 
-        dataSource.getPopularMovieList(
+        dataSource.getAllMovieList(
             params.key,
             success = {
                 totalPages = it.totalPages
                 callback.onResult(it.movies, params.key + PAGE_SIZE)
-                onPagingSuccess(it)
+                pagingSuccess(it)
             }, failed = {
-                onPagingFailed(it)
+                pagingFailed(it)
                 Log.e(TAG, it)
             })
     }
