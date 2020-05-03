@@ -7,9 +7,16 @@ import yunji.cleanarchitecturestudy02.model.response.MovieListResponse
  */
 interface MovieDataSource {
 
-    fun getPopularMovieList(
+    fun getAllMovieList(
         page: Int,
-        success: (movieListResponse: MovieListResponse) -> Unit,
+        success: (movieListResponse: MovieListResponse?) -> Unit,
+        failed: (errMsg: String) -> Unit
+    )
+
+    fun searchMovieByTitle(
+        query: String,
+        page: Int,
+        success: (movieListResponse: MovieListResponse?) -> Unit,
         failed: (errMsg: String) -> Unit
     )
 }

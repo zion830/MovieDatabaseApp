@@ -2,11 +2,14 @@ package yunji.cleanarchitecturestudy02.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import yunji.cleanarchitecturestudy02.R
 import yunji.cleanarchitecturestudy02.base.BaseViewModel
 import yunji.cleanarchitecturestudy02.model.repository.MovieRepository
+import yunji.cleanarchitecturestudy02.model.source.MoviePageDataSource
 import yunji.cleanarchitecturestudy02.ui.MovieListUiModel
+import yunji.cleanarchitecturestudy02.ui.toUiModel
 
 /*
  * Created by yunji on 10/03/2020
@@ -20,37 +23,29 @@ class MainViewModel(
     private val _searchKeyword = MutableLiveData<String>()
     private val searchKeyword: LiveData<String> get() = _searchKeyword
 
-    lateinit var pagingMovieList: LiveData<PagedList<MovieListUiModel>>
+    private val pagingSuccess: () -> Unit = {
+        _isLoading.value = false
+        _isExist.value = pagingMovieList.value?.isNotEmpty()
+    }
+
+    private val failPaging: (msg: String) -> Unit = {
+        _toastTextId.value = (R.string.err_search_fail)
+        _isLoading.value = false
+        _isExist.value = pagingMovieList.value?.isNotEmpty()
+    }
+
+    private val pageDataSource = MoviePageDataSource.Factory(repository, pagingSuccess, failPaging).map {
+        it.toUiModel()
+    }
+
+    val pagingMovieList: LiveData<PagedList<MovieListUiModel>> =
+        LivePagedListBuilder(pageDataSource, MoviePageDataSource.moviePageConfig).build()
 
     fun initMovieData() {
         _isLoading.value = true
-
-        repository.getMoviePagedList(
-            pagingSuccess = {
-                _isLoading.value = false
-                _isExist.value = pagingMovieList.value?.size!! > 0
-            },
-            pagingFailed = {
-                _toastTextId.value = (R.string.err_search_fail)
-                _isLoading.value = false
-                _isExist.value = false
-            }
-        )
     }
 
     fun searchMovie(query: String) {
-        repository.searchMovieByTitle(
-            query,
-            0,
-            success = {
-                _isLoading.value = false
-                _isExist.value = pagingMovieList.value?.size!! > 0
-            },
-            failed = {
-                _toastTextId.value = (R.string.err_search_fail)
-                _isLoading.value = false
-                _isExist.value = false
-            }
-        )
+
     }
 }

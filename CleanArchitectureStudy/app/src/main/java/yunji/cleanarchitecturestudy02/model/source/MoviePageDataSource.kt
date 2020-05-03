@@ -5,14 +5,13 @@ import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
 import yunji.cleanarchitecturestudy02.model.response.Movie
-import yunji.cleanarchitecturestudy02.model.response.MovieListResponse
 
 /*
  * Created by yunji on 12/03/2020
  */
 class MoviePageDataSource private constructor(
     private val dataSource: MovieDataSource,
-    private val pagingSuccess: (response: MovieListResponse) -> Unit,
+    private val pagingSuccess: () -> Unit,
     private val pagingFailed: (errMsg: String) -> Unit
 ) : PageKeyedDataSource<Int, Movie>() {
     private var totalPages = FIRST_PAGE
@@ -25,6 +24,7 @@ class MoviePageDataSource private constructor(
 
         val moviePageConfig = PagedList.Config.Builder()
             .setPageSize(PAGE_SIZE)
+            .setEnablePlaceholders(false)
             .setInitialLoadSizeHint(PAGE_SIZE)
             .setPrefetchDistance(PAGE_SIZE)
             .build()
@@ -32,7 +32,7 @@ class MoviePageDataSource private constructor(
 
     class Factory(
         private val dataSource: MovieDataSource,
-        private val pagingSuccess: (response: MovieListResponse) -> Unit,
+        private val pagingSuccess: () -> Unit,
         private val pagingFailed: (errMsg: String) -> Unit
     ) : DataSource.Factory<Int, Movie>() {
 
@@ -44,9 +44,11 @@ class MoviePageDataSource private constructor(
         dataSource.getAllMovieList(
             FIRST_PAGE,
             success = {
-                totalPages = it.totalPages
-                callback.onResult(it.movies, null, FIRST_PAGE + PAGING_UNIT)
-                pagingSuccess(it)
+                it?.let {
+                    totalPages = it.totalPages
+                    callback.onResult(it.movies, null, FIRST_PAGE + PAGING_UNIT)
+                }
+                pagingSuccess()
             }, failed = {
                 pagingFailed(it)
                 Log.e(TAG, it)
@@ -61,9 +63,11 @@ class MoviePageDataSource private constructor(
         dataSource.getAllMovieList(
             params.key,
             success = {
-                totalPages = it.totalPages
-                callback.onResult(it.movies, params.key + PAGE_SIZE)
-                pagingSuccess(it)
+                it?.let {
+                    totalPages = it.totalPages
+                    callback.onResult(it.movies, params.key + PAGING_UNIT)
+                }
+                pagingSuccess()
             }, failed = {
                 pagingFailed(it)
                 Log.e(TAG, it)

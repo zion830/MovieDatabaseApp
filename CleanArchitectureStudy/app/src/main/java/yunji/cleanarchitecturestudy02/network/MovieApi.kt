@@ -24,4 +24,11 @@ interface MovieApi {
         @Path("movieId") movieId: Int,
         @Query("language") language: String = DEFAULT_LANGUAGE
     ): Call<MovieDetailsResponse>
+
+    @GET("3/search/movie")
+    fun searchMovieByTitle(
+        @Query("query") query: String,
+        @Query("page") page: Int,
+        @Query("language") language: String = DEFAULT_LANGUAGE
+    ): Call<MovieListResponse>
 }

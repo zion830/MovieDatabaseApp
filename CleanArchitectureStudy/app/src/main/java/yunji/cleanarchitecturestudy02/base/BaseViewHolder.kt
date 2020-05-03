@@ -12,7 +12,7 @@ import yunji.cleanarchitecturestudy02.listener.OnItemClickListener
 /*
  * Created by yunji on 09/03/2020
  */
-abstract class BaseViewHolder<out B : ViewDataBinding, T>(
+abstract class BaseViewHolder<B : ViewDataBinding, T>(
     @LayoutRes layoutResId: Int,
     parent: ViewGroup?
 ) : RecyclerView.ViewHolder(
@@ -20,7 +20,7 @@ abstract class BaseViewHolder<out B : ViewDataBinding, T>(
 ) {
     private val binding: B = DataBindingUtil.bind(itemView)!!
 
-    fun bind(item: T, listener: OnItemClickListener<T>) {
+    fun bind(item: T?, listener: OnItemClickListener<T>) {
         try {
             binding.run {
                 setVariable(BR.item, item)

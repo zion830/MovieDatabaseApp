@@ -4,19 +4,19 @@ import yunji.cleanarchitecturestudy02.R
 import yunji.cleanarchitecturestudy02.base.BaseDiffUtilCallback
 import yunji.cleanarchitecturestudy02.base.BasePagedRecyclerView
 import yunji.cleanarchitecturestudy02.databinding.ItemMovieBinding
-import yunji.cleanarchitecturestudy02.model.response.Movie
+import yunji.cleanarchitecturestudy02.ui.MovieListUiModel
 
 /*
  * Created by yunji on 10/03/2020
  */
-class MoviePagedRecyclerAdapter : BasePagedRecyclerView<ItemMovieBinding, Movie>(
+class MoviePagedRecyclerAdapter : BasePagedRecyclerView<ItemMovieBinding, MovieListUiModel>(
     movieDiffUtilCallback, R.layout.item_movie
 ) {
 
     companion object {
-        private val movieDiffUtilCallback = object : BaseDiffUtilCallback<Movie>() {
+        private val movieDiffUtilCallback = object : BaseDiffUtilCallback<MovieListUiModel>() {
 
-            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean = oldItem.id == newItem.id
+            override fun areItemsTheSame(oldItem: MovieListUiModel, newItem: MovieListUiModel): Boolean = oldItem.id == newItem.id
         }
     }
 }

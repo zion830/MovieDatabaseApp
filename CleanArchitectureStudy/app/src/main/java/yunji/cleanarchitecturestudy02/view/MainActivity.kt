@@ -15,7 +15,7 @@ import yunji.cleanarchitecturestudy02.databinding.ActivityMainBinding
 import yunji.cleanarchitecturestudy02.listener.OnItemClickListener
 import yunji.cleanarchitecturestudy02.listener.OnSingleClickListener
 import yunji.cleanarchitecturestudy02.model.repository.MovieRepository
-import yunji.cleanarchitecturestudy02.model.response.Movie
+import yunji.cleanarchitecturestudy02.ui.MovieListUiModel
 import yunji.cleanarchitecturestudy02.util.showToast
 import yunji.cleanarchitecturestudy02.viewmodel.MainViewModel
 import yunji.cleanarchitecturestudy02.viewmodel.MainViewModelFactory
@@ -39,8 +39,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     private fun initAdapter() {
         movieRecyclerAdapter.apply {
             onItemClickListener = OnSingleClickListener.wrap(
-                object : OnItemClickListener<Movie> {
-                    override fun onClick(item: Movie) = showToast(item.toString())
+                object : OnItemClickListener<MovieListUiModel> {
+                    override fun onClick(item: MovieListUiModel) = showToast(item.toString())
                 })
         }
     }

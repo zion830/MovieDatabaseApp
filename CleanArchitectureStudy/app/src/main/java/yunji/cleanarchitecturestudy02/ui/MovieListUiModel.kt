@@ -17,4 +17,8 @@ data class MovieListUiModel(
     fun getPosterFullPath() = POSTER_BASE_URL + posterPath
 }
 
-fun Movie.toUiModel() = MovieListUiModel(id, title, releaseDate, overview, posterPath)
+fun Movie?.toUiModel() = if (this != null) {
+    MovieListUiModel(id, title, releaseDate ?: "", overview ?: "", posterPath ?: "")
+} else {
+    MovieListUiModel()
+}

@@ -18,14 +18,31 @@ class MovieRemoteDataSource(
 ) : MovieDataSource {
     private val tag = MovieRemoteDataSource::class.simpleName
 
-    override fun getPopularMovieList(
+    override fun getAllMovieList(
         page: Int,
-        success: (movieListResponse: MovieListResponse) -> Unit,
+        success: (movieListResponse: MovieListResponse?) -> Unit,
         failed: (errMsg: String) -> Unit
     ) {
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 val response = movieApi.getPopularMovies(page).awaitResponse()
+                handleResponse(response, success, failed)
+            } catch (e: Exception) {
+                handleResponse(null, success, failed)
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun searchMovieByTitle(
+        query: String,
+        page: Int,
+        success: (movieListResponse: MovieListResponse?) -> Unit,
+        failed: (errMsg: String) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val response = movieApi.searchMovieByTitle(query, page).awaitResponse()
                 handleResponse(response, success, failed)
             } catch (e: Exception) {
                 handleResponse(null, success, failed)
